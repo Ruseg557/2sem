@@ -28,7 +28,7 @@ TElem *CreateStack(TElem *St);
 
 void OutputStack(TElem *&St);
 
-TElem *Decide(TElem **PSt1, TElem **St2);
+void Decide(TElem **PSt1, TElem **PSt2, TElem **PSt3);
 
 TElem *FreeStack(TElem *St);
 
@@ -63,7 +63,7 @@ int main() {
                 getch();
                 break;
             case 'D':
-                StackTop3 = Decide(&StackTop1, &StackTop2);
+                Decide(&StackTop1, &StackTop2, &StackTop3);
                 break;
             case 'F':
                 StackTop1 = FreeStack(StackTop1);
@@ -148,34 +148,24 @@ void OutputStack(TElem *&St) {
     printf("\n");
 }
 
-TElem *Decide(TElem **PSt1, TElem **PSt2) {
-    TElem *latinTemp = nullptr, *nonLatinTemp = nullptr;
+void Decide(TElem **PSt1, TElem **PSt2, TElem **PSt3) {
     if (*PSt1) {
-        TElem *elem = *PSt1;
+        while (*PSt1) {
+            char info = PopStack(PSt1);
 
-        while (elem) {
-            TElem *next = elem->Next;
-
-            if (isalpha(elem->Info)) {
-                elem->Next = latinTemp;
-                latinTemp = elem;
+            if (isalpha(info)) {
+                *PSt3 = PushStack(*PSt3, info);
             } else {
-                elem->Next = nonLatinTemp;
-                nonLatinTemp = elem;
+                *PSt2 = PushStack(*PSt2, info);
             }
-            *PSt1 = next;
-            elem = next;
-        } // while
-
-        *PSt2 = nonLatinTemp;
-
+        } //while
         printf("Stack has been separated for latin and non-latin chars.\n");
-
-    } else { printf("Original stack is empty.\n"); }
+    } else {
+        printf("Original stack is empty.\n");
+    }
 
     printf("Press ENTER to continue");
     getch();
-    return latinTemp;
 }
 
 TElem *FreeStack(TElem *St) {

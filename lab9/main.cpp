@@ -8,17 +8,18 @@
  * Сначала правая половина, потом левая
  */
 
-int FindAnswer(int *R, int N) {
-    if (N == 1) {                                               //Если остался один элемент
-        double value = pow(R[0] * R[0] + 1, 1.0 / 3.0);
+int FindAnswer(int *R, int start, int end) {
+    int N = end - start + 1;
+    if (N == 1) {                                                             // Если остался один элемент
+        double value = pow(R[start] * R[start] + 1, 1.0 / 3.0);
         return (value > 20) ? 1 : 0;
-    } else if (N == 2) {                                        //Если осталось два элемента
-        double value1 = pow(R[0] * R[0] + 1, 1.0 / 3.0);
-        double value2 = pow(R[1] * R[1] + 1, 1.0 / 3.0);
+    } else if (N == 2) {                                                      // Если осталось два элемента
+        double value1 = pow(R[start] * R[start] + 1, 1.0 / 3.0);
+        double value2 = pow(R[start + 1] * R[start + 1] + 1, 1.0 / 3.0);
         return ((value1 > 20) ? 1 : 0) + ((value2 > 20) ? 1 : 0);
-    } else {                                                    //Если больше двух элементов - рекурсия
-        int mid = N / 2;
-        return FindAnswer(R + mid, N - mid) + FindAnswer(R, mid);  //Правая половина + левая половина
+    } else {                                                                  // Если больше двух элементов - рекурсия
+        int mid = start + (end - start) / 2;
+        return FindAnswer(R, mid + 1, end) + FindAnswer(R, start, mid);  // Правая половина + левая половина
     }
 }
 
@@ -43,7 +44,7 @@ int main() {
     printf("\nВходные данные: \nКол-во элементов N: %d\nМассив R: ", N);
     for (int i = 0; i < N; i++) printf("%d ", R[i]);
 
-    int counter = FindAnswer(R, N);
+    int counter = FindAnswer(R, 0, N-1);
     printf("\n\nВыходные данные:\nУдовлетворяющих условию элементов: %d\n", counter);
 
     delete[] R;
